@@ -1,26 +1,60 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import './assets/css/index.css';
+//引入home组件
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import routes from './model/router.js';
+
+
+
+
 
 class App extends Component {
+  constructor(props){
+    super(props);
+    this.state={
+        
+    }
+  }
+  
+  //render放模板，jsx语法
   render() {
+    
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <Router>
+        <div>
+          <header className="header">
+            <Link to="/">HOME</Link>
+            <Link to="/user">USER</Link>
+            <Link to="/shop">SHOP</Link>
+          </header>
+          {
+            // 路由的模块化
+            routes.map((route,key)=>{
+              if(route.exact){
+                return(
+                  // exact叫严格模式
+                  // <Route key={key} exact path={route.path} component={route.component} routes={route.routes} />
+                  <Route key={key} exact path={route.path} render={props=>(
+                    <route.component {...props} routes={route.routes} />
+                    // <route.component 是 value.component
+                    // <route.component {...props} routes={route.routes} />相当于
+                    // <User  {...props} routes={route.routes} />
+                  )} />
+                )
+              }else{
+                return(
+                  <Route key={key} path={route.path} render={props=>(
+                    <route.component {...props} routes={route.routes} />
+                  )} />
+                )
+              }
+              
+            })
+          }
+          
+          
+        </div>
+      </Router>
     );
   }
 }
